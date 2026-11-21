@@ -1,7 +1,7 @@
 {
   "name": "sdlc-agent-orchestrator",
-  "version": "0.5.0",
-  "description": "v0.5.0 · 按任务选择开发环节和 Qoder 当前可用模型，以独立会话执行，由主会话统一调度、交互和核验交付。",
+  "version": "0.6.0",
+  "description": "v0.6.0 · 按任务选择开发环节和 Qoder 当前可用模型，以独立会话执行，由主会话统一调度、交互和核验交付。",
   "keywords": ["qoder-plugin", "sdlc", "orchestration", "model-selection"],
   "skills": "./skills/",
   "rules": "./rules/"

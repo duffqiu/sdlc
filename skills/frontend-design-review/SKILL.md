@@ -12,7 +12,7 @@ user-invocable: false
 
 ## 输入
 
-- 已确认的 `DESIGN.md`、mock 或截图基线
+- 已确认的 `DESIGN.md`、mock 或截图基线；来自 `design-styles/<slug>` 时记录 slug 和上游链接
 - 待审查的候选版本、运行方式和环境
 - 目标浏览器、设备、视口和必须覆盖的用户流程
 

@@ -8,7 +8,7 @@ user-invocable: false
 
 # 前端设计实现
 
-按已确认的 `DESIGN.md` 或 mock 实现界面。方向未确认时返回 `NEEDS_INPUT`，不自行选风格。
+按已确认的 `DESIGN.md` 或 mock 实现界面。方向未确认时返回 `NEEDS_INPUT`，不自行选风格。若 `DESIGN.md` 来自 `design-styles/<slug>/DESIGN.md`，保留来源 slug 和上游链接；只调整与本项目内容和组件相关的 token，不擅自替换为另一种风格。
 
 ## 实现原则
 

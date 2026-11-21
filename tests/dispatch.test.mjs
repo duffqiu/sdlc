@@ -143,6 +143,10 @@ test('frontend design skills are bundled and referenced by the relevant stages',
     assert.ok(text.includes('description:'), `${name}: description`);
     assert.ok(text.includes('user-invocable: false'), `${name}: internal skill`);
   }
+  const direction = await readFile(new URL('../../skills/frontend-design-direction/SKILL.md', root), 'utf8');
+  assert.ok(direction.includes('design-styles/index.json') && direction.includes('AskMe') && direction.includes('NEEDS_INPUT'));
+  const variants = await readFile(new URL('../../skills/frontend-design-variants/SKILL.md', root), 'utf8');
+  assert.ok(variants.includes('design-styles/index.json'));
   const solution = await readFile(new URL('references/solution-designer.md', root), 'utf8');
   const implementation = await readFile(new URL('references/implementation-engineer.md', root), 'utf8');
   const reviewer = await readFile(new URL('references/independent-reviewer.md', root), 'utf8');
@@ -151,6 +155,25 @@ test('frontend design skills are bundled and referenced by the relevant stages',
   assert.ok(implementation.includes('frontend-design-implementation'));
   assert.ok(reviewer.includes('frontend-design-review'));
   assert.ok(acceptance.includes('frontend-design-review'));
+});
+
+test('design style catalog is bundled with 84 entries, four groups, and 16 local DESIGN.md files', async () => {
+  const index = JSON.parse(await readFile(new URL('../../design-styles/index.json', root), 'utf8'));
+  assert.equal(index.styles.length, 84);
+  assert.equal(new Set(index.styles.map(style => style.slug)).size, 84);
+  assert.deepEqual(index.groups.map(group => group.id), ['ai_dev', 'saas', 'design', 'business']);
+  const bundled = index.styles.filter(style => style.bundled);
+  assert.equal(bundled.length, 16);
+  for (const style of index.styles) {
+    for (const field of ['slug', 'name', 'group', 'description', 'preview', 'bundled']) assert.ok(Object.hasOwn(style, field), `${style.slug}: ${field}`);
+  }
+  for (const style of bundled) {
+    const text = await readFile(new URL(`../../design-styles/${style.slug}/DESIGN.md`, root), 'utf8');
+    assert.ok(text.length > 100, `${style.slug}: DESIGN.md content`);
+  }
+  assert.ok((await readFile(new URL('../../design-styles/LICENSE', root), 'utf8')).includes('MIT License'));
+  assert.ok(skill.includes('design-styles/index.json'));
+  assert.ok(coordinator.includes('design-styles/index.json') && coordinator.includes('最多两层'));
 });
 
 test('AI harness optimization is an optional selectable stage with a bounded prompt', async () => {

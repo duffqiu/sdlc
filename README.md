@@ -1,6 +1,6 @@
 # SDLC 开发环节调度
 
-Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.5.0`。
+Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.6.0`。
 
 先根据任务推荐开发环节，再在主会话内展示可交互表格：每行默认选中推荐模型，可用下拉框更换模型、勾选是否执行，最后点击“确认并继续”。预选只是建议，确认前不启动子会话；确认后由主会话统一调度和处理问答，不走固定 pipeline。
 
@@ -68,6 +68,12 @@ Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.5.0`。
 - `frontend-design-review`：用真实浏览器截图审查视觉、响应式、交互和无障碍
 
 方案设计、开发实现、独立评审和独立验收环节会按需使用它们；内置 Skill 不可用时按环节提示词执行，不下载或替换第三方 Skill。
+
+## 样式目录与选择
+
+`design-styles/` 收录来自 [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) 的 84 个风格索引和 16 个常用 `DESIGN.md`，按其 MIT 许可证使用。内置风格包括 Claude、Linear、Vercel、Notion、Stripe、Coinbase、Figma、Framer 等，完整索引见 `design-styles/index.json`。
+
+用户未指定风格时，主会话用 AskMe 分两层选择：先选四类方向（AI 与开发者工具、SaaS 与效率工具、设计与创意工具、金融／电商与消费品牌），再选 3–4 个具体风格。用户也可以直接给出品牌名、slug 或参考网站。选中后以对应 `DESIGN.md` 为实现和验收基线；未内置的 slug 经确认后再获取，不一次性列出 84 个样式。
 
 ## 主控规则注入
 
