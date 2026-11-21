@@ -133,6 +133,26 @@ test('every stage output must be summarized and shown to the user in the main se
   }
 });
 
+test('frontend design skills are bundled and referenced by the relevant stages', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../../.qoder-plugin/plugin.json', root), 'utf8'));
+  assert.equal(manifest.skills, './skills/');
+  const names = ['frontend-design-direction', 'frontend-design-variants', 'frontend-design-implementation', 'frontend-design-review'];
+  for (const name of names) {
+    const text = await readFile(new URL(`../../skills/${name}/SKILL.md`, root), 'utf8');
+    assert.ok(text.includes(`name: ${name}`), `${name}: frontmatter name`);
+    assert.ok(text.includes('description:'), `${name}: description`);
+    assert.ok(text.includes('user-invocable: false'), `${name}: internal skill`);
+  }
+  const solution = await readFile(new URL('references/solution-designer.md', root), 'utf8');
+  const implementation = await readFile(new URL('references/implementation-engineer.md', root), 'utf8');
+  const reviewer = await readFile(new URL('references/independent-reviewer.md', root), 'utf8');
+  const acceptance = await readFile(new URL('references/acceptance-verifier.md', root), 'utf8');
+  assert.ok(solution.includes('frontend-design-direction') && solution.includes('frontend-design-variants'));
+  assert.ok(implementation.includes('frontend-design-implementation'));
+  assert.ok(reviewer.includes('frontend-design-review'));
+  assert.ok(acceptance.includes('frontend-design-review'));
+});
+
 test('AI harness optimization is an optional selectable stage with a bounded prompt', async () => {
   assert.ok(skill.includes('AI Harness 优化'));
   assert.ok(skill.includes('references/harness-optimizer.md'));

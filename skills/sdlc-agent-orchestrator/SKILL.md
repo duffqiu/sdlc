@@ -1,6 +1,6 @@
 ---
 name: sdlc-agent-orchestrator
-description: v0.4.0 · 当用户明确要求按开发环节组织任务、为不同环节选择 Qoder 模型、用独立会话执行 SDLC 工作，或继续已有环节任务时使用。不因普通改代码、单次评审或部署请求就自动开启多会话，也不用于仅编辑本插件。
+description: v0.5.0 · 当用户明确要求按开发环节组织任务、为不同环节选择 Qoder 模型、用独立会话执行 SDLC 工作，或继续已有环节任务时使用。不因普通改代码、单次评审或部署请求就自动开启多会话，也不用于仅编辑本插件。
 ---
 
 # 按需开发环节调度
@@ -28,6 +28,8 @@ description: v0.4.0 · 当用户明确要求按开发环节组织任务、为不
 | 交付运维 | [运维提示词](references/release-operations.md) | 独立会话，按诊断或发布任务执行 |
 
 表中提示词名称不是已注册 Agent ID。使用默认 Qoder 执行者即可；只有用户指定其他执行者时，才查询目标可用 Agent 并采用真实 ID。提示词不能授予工具权限。
+
+前端相关任务使用本项目内置的四个设计 Skill，不依赖用户本地安装：`frontend-design-direction`（设计方向与 `DESIGN.md`）、`frontend-design-variants`（三个方向对比）、`frontend-design-implementation`（按确认方向实现）、`frontend-design-review`（真实浏览器视觉与交互审查）。它们随插件安装；不可用时按对应环节提示词执行，不下载或替换第三方 Skill。
 
 ## 1. 理解输入，推荐环节
 

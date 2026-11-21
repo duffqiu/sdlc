@@ -1,6 +1,6 @@
 # SDLC 开发环节调度
 
-Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.4.0`。
+Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.5.0`。
 
 先根据任务推荐开发环节，再在主会话内展示可交互表格：每行默认选中推荐模型，可用下拉框更换模型、勾选是否执行，最后点击“确认并继续”。预选只是建议，确认前不启动子会话；确认后由主会话统一调度和处理问答，不走固定 pipeline。
 
@@ -57,6 +57,17 @@ Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.4.0`。
 创建子会话时使用 `create_chat_session` 的顶层 `title` 字段，例如 `title = "开发实现：修复用户登录异常"`；`xxx` 为开发环节中文描述，`yyy` 为 8–10 个汉字的任务描述，不加标点、引号或换行。`prompt` 直接从任务交接包开始，不放命名指令，`systemPrompt` 只放完整开发环节提示词。
 
 宿主不提供 `title` 或旧 Peer 会忽略该字段时，插件会报告命名能力限制并暂停派发，不改用 prompt 前缀。实际标题是否显示仍以宿主可观察状态为准。
+
+## 内置前端设计 Skills
+
+前端设计链路不依赖用户本地安装，随插件提供四个轻量 Skill：
+
+- `frontend-design-direction`：确定视觉方向，产出 `DESIGN.md` 或等价设计约束
+- `frontend-design-variants`：给出三个真正不同的方向、取舍和推荐
+- `frontend-design-implementation`：按已确认方向实现生产级界面
+- `frontend-design-review`：用真实浏览器截图审查视觉、响应式、交互和无障碍
+
+方案设计、开发实现、独立评审和独立验收环节会按需使用它们；内置 Skill 不可用时按环节提示词执行，不下载或替换第三方 Skill。
 
 ## 主控规则注入
 
