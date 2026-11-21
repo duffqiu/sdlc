@@ -22,7 +22,7 @@ user-invocable: false
 
 用户未指定品牌或视觉风格时，先读取插件根目录的 `design-styles/index.json`（相对本 Skill 为 `../../design-styles/index.json`），不要凭空生成方向：
 
-1. 按任务从四个类别中推荐一个：`ai_dev`（AI 与开发者工具）、`saas`（SaaS 与效率工具）、`design`（设计与创意工具）、`business`（金融、电商与消费品牌）。
+1. 按任务从四个视觉气质中推荐一个：`tech`（技术／产品感）、`minimal`（简洁／效率感）、`creative`（创意／视觉感）、`expressive`（大胆／品牌感）；行业分类只作为元数据，不作为一级选择。
 2. 在类别内按任务相关性选 3–4 个风格，每个给出名称、slug、气质、适用场景、取舍和预览链接。
 3. 返回 `NEEDS_INPUT` 给主会话，由主会话用 AskMe 分两层让用户选择；本会话不直接调用 AskMe，也不一次列出全部 84 个样式。
 4. 用户给出品牌名、slug 或参考网站时直接匹配；选中项为 `bundled: true` 时读取对应 `design-styles/<slug>/DESIGN.md`，未内置时交主会话确认后再获取。

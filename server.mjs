@@ -122,7 +122,7 @@ async function handle(request, store, dashboards) {
       return ok({
         protocolVersion: supportedVersions.includes(params.protocolVersion) ? params.protocolVersion : '2025-11-25',
         capabilities: { tools: {}, resources: {} },
-        serverInfo: { name: 'sdlc-agent-orchestrator', version: '0.6.0' },
+        serverInfo: { name: 'sdlc-agent-orchestrator', version: '0.6.1' },
       });
     case 'ping': return ok({});
     case 'tools/list': return ok({ tools });

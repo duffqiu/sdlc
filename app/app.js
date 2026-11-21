@@ -238,7 +238,7 @@ controls();
 if (window.parent === window) {
   report('请在 Qoder 中调用开发环节选择工具打开卡片，直接打开文件不会连接主会话。', true);
 } else {
-  request('ui/initialize', { protocolVersion: '2026-01-26', appInfo: { name: 'sdlc-selector', version: '0.6.0' }, appCapabilities: { availableDisplayModes: ['inline'] } }).then(result => {
+  request('ui/initialize', { protocolVersion: '2026-01-26', appInfo: { name: 'sdlc-selector', version: '0.6.1' }, appCapabilities: { availableDisplayModes: ['inline'] } }).then(result => {
     if (closed) return;
     if (result?.protocolVersion !== '2026-01-26') throw new Error('宿主不支持当前卡片协议。');
     host = result.hostCapabilities ?? {}; ready = true;

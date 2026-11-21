@@ -82,7 +82,7 @@ function render() {
 
     <footer>
       <span>上游产物未展示不得继续 · 主会话统一调度</span>
-      <span>SDLCI 0.6.0</span>
+      <span>SDLCI 0.6.1</span>
     </footer>
   `;
 

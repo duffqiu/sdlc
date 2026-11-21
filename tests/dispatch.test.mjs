@@ -161,7 +161,7 @@ test('design style catalog is bundled with 84 entries, four groups, and 16 local
   const index = JSON.parse(await readFile(new URL('../../design-styles/index.json', root), 'utf8'));
   assert.equal(index.styles.length, 84);
   assert.equal(new Set(index.styles.map(style => style.slug)).size, 84);
-  assert.deepEqual(index.groups.map(group => group.id), ['ai_dev', 'saas', 'design', 'business']);
+  assert.deepEqual(index.groups.map(group => group.id), ['tech', 'minimal', 'creative', 'expressive']);
   const bundled = index.styles.filter(style => style.bundled);
   assert.equal(bundled.length, 16);
   for (const style of index.styles) {
