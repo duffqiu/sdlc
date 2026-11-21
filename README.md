@@ -1,6 +1,6 @@
 # SDLC 开发环节调度
 
-Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.6.1`。
+Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.6.2`。
 
 先根据任务推荐开发环节，再在主会话内展示可交互表格：每行默认选中推荐模型，可用下拉框更换模型、勾选是否执行，最后点击“确认并继续”。预选只是建议，确认前不启动子会话；确认后由主会话统一调度和处理问答，不走固定 pipeline。
 
@@ -74,6 +74,16 @@ Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.6.1`。
 `design-styles/` 收录来自 [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) 的 84 个风格索引和 16 个常用 `DESIGN.md`，按其 MIT 许可证使用。内置风格包括 Claude、Linear、Vercel、Notion、Stripe、Coinbase、Figma、Framer 等，完整索引见 `design-styles/index.json`。
 
 用户未指定风格时，主会话用 AskMe 分两层选择：先选四类视觉气质（技术／产品感、简洁／效率感、创意／视觉感、大胆／品牌感），再选 3–4 个具体风格；行业分类只作为元数据，不作为一级选择。用户也可以直接给出品牌名、slug 或参考网站。选中后以对应 `DESIGN.md` 为实现和验收基线；未内置的 slug 经确认后再获取，不一次性列出 84 个样式。
+
+## AI Harness 优化何时出现
+
+它不是固定环节，只在命中信号时加入环节选择表，且始终可选：
+
+- 强信号：用户明确提到 harness、AGENTS.md、rules、skills、hooks、commands、MCP、上下文、记忆或 Agent 行为；任务本身是改 Agent 工作方式；同类 Agent 错误重复 ≥2 次、指令被忽略、Skill 不触发、hook 不生效或上下文溢出；新项目缺少 AI 协作基础设施。展示并默认勾选。
+- 弱信号：上下文或 token 成本偏高、大量重复手工步骤、规则／Skill／MCP 可能冲突但无明确故障。展示但不默认勾选。
+- 普通功能开发、修复、评审、验收、发布、前端设计、纯文档或单次提示词调整不展示。
+
+没有写授权时，该环节只做只读诊断，不改 harness 文件。
 
 ## 主控规则注入
 

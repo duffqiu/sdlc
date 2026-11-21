@@ -176,6 +176,14 @@ test('design style catalog is bundled with 84 entries, four groups, and 16 local
   assert.ok(coordinator.includes('design-styles/index.json') && coordinator.includes('最多两层'));
 });
 
+test('AI harness optimization is surfaced only for explicit or repeated harness signals', async () => {
+  for (const rule of ['强信号', '弱信号', '不展示', '重复 ≥2 次', '只读诊断', 'required=true']) assert.ok(skill.includes(rule), `Skill: ${rule}`);
+  for (const rule of ['AI Harness 优化只在命中信号时加入环节选择表', '强信号', '弱信号', '不展示', '只读诊断']) assert.ok(coordinator.includes(rule), `主控: ${rule}`);
+  const harness = await readFile(new URL('references/harness-optimizer.md', root), 'utf8');
+  assert.ok(harness.includes('普通应用功能开发') && harness.includes('只读诊断'));
+  assert.ok(!skill.includes('AI Harness 优化是强制环节'));
+});
+
 test('AI harness optimization is an optional selectable stage with a bounded prompt', async () => {
   assert.ok(skill.includes('AI Harness 优化'));
   assert.ok(skill.includes('references/harness-optimizer.md'));
