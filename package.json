@@ -1,0 +1,13 @@
+{
+  "name": "sdlc-agent-orchestrator",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check server.mjs && node --check selection-store.mjs && node --check dashboard-store.mjs && node --check app/app.js && node --check app/dashboard.js",
+    "preview": "node tests/preview.mjs"
+  }
+}

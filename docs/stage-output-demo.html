@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDLC 环节产物总览 · 单步推进版</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --surface: #ffffff;
+      --grid: rgba(60, 80, 100, 0.08);
+      --line: rgba(60, 80, 100, 0.18);
+      --text: #1f2933;
+      --muted: #5c6875;
+      --accent: #0d7377;
+      --warn: #f5a623;
+      --danger: #e74c3c;
+      --ok: #00a86b;
+      --pending: #8e99a4;
+      --shadow: 0 2px 14px rgba(30, 40, 50, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        var(--bg);
+      background-size: 36px 36px;
+      color: var(--text);
+      font-family: "Noto Serif SC", "Crimson Text", serif;
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      padding: 26px 34px 20px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(6px);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    h1::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .meta {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .hint {
+      padding: 12px 34px 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .timeline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 34px 10px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 46px;
+      left: 8%;
+      right: 8%;
+      height: 2px;
+      background: var(--line);
+      z-index: 0;
+    }
+
+    .timeline-step {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      cursor: pointer;
+      width: 120px;
+    }
+
+    .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      background: var(--surface);
+      border: 2px solid var(--pending);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: transparent;
+      transition: transform .15s, border-color .15s, background .15s;
+    }
+
+    .timeline-step.done .dot {
+      background: var(--ok);
+      border-color: var(--ok);
+      color: #fff;
+    }
+
+    .timeline-step.current .dot {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: scale(1.25);
+      box-shadow: 0 0 0 4px rgba(13, 115, 119, 0.14);
+    }
+
+    .timeline-step.upcoming .dot { background: var(--surface); border-color: var(--line); }
+
+    .step-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .step-status {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .detail {
+      padding: 18px 34px 44px;
+      animation: fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; bottom: 0; width: 5px;
+      background: var(--pending);
+    }
+
+    .card.ok::before { background: var(--ok); }
+    .card.warn::before { background: var(--warn); }
+    .card.danger::before { background: var(--danger); }
+    .card.pending::before { background: var(--pending); }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .badge {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      padding: 3px 9px;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+
+    .summary {
+      color: var(--text);
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    .artifact-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px;
+    }
+
+    .artifact-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px dashed var(--line);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+    }
+
+    .artifact-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .artifact-list a:hover { text-decoration: underline; }
+
+    .kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .risk-list {
+      margin: 0 0 20px;
+      padding-left: 18px;
+    }
+
+    .risk-list li { margin-bottom: 6px; }
+
+    .matrix {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+    }
+
+    .matrix th, .matrix td {
+      padding: 9px 11px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .matrix th {
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      background: rgba(60,80,100,0.04);
+    }
+
+    .result { font-weight: 600; letter-spacing: 0.04em; }
+
+    .action {
+      border-left: 3px solid var(--accent);
+      padding: 14px 16px;
+      background: rgba(13, 115, 119, 0.06);
+      margin-top: 12px;
+    }
+
+    .action strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .action span { color: var(--muted); font-size: 13px; }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 16px 34px;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: "IBM Plex Mono", monospace;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.6);
+    }
+
+    .nav-note {
+      padding: 0 34px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 980px) {
+      .timeline { overflow-x: auto; gap: 20px; justify-content: flex-start; }
+      .timeline::before { display: none; }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SDLC 环节产物总览</h1>
+    <div class="meta">
+      TASK-2026-1116-01 · planVersion v3 · 当前环节：独立评审
+    </div>
+  </header>
+
+  <div class="hint">流程按阶段单向推进；点击已完成环节可回看历史产物。</div>
+
+  <nav class="timeline" id="timeline"></nav>
+  <div class="nav-note" id="navNote"></div>
+
+  <main class="detail" id="detail"></main>
+
+  <footer>
+    <span>上游产物未展示不得继续 · 主会话统一调度</span>
+    <span>SDLCI 0.2.8 · v0.2.8</span>
+  </footer>
+
+  <script>
+    const stages = [
+      {
+        id: "DESIGN",
+        title: "方案设计",
+        status: "READY_FOR_APPROVAL",
+        color: "ok",
+        summary: "将登录模块改造为 OAuth2 + OIDC；推荐方案按渐进迁移设计，先接入 provider 再回退本地认证，避免单点故障。",
+        artifacts: [
+          ["docs/design/auth-v3.md", "主设计文档"],
+          ["docs/design/auth-sequence.mmd", "时序图"]
+        ],
+        decisions: [
+          "使用 PKCE 流程，移动端与 SPA 共用同一套授权入口。",
+          "会话由服务端缓存改为无状态 JWT + Redis 黑名单，便于水平扩展。"
+        ],
+        matrix: [
+          ["AC-1", "支持 OIDC 标准登录", "ok", "COVERED"],
+          ["AC-2", "本地登录作为降级路径", "warn", "PLANNED"],
+          ["DoD-3", "设计文档通过评审", "pending", "NOT_DUE"]
+        ],
+        risks: [
+          "生产环境 provider 的 rate limit 未实测。",
+          "用户是否接受首次登录时的额外授权页？需产品确认。"
+        ],
+        next: "等待用户确认设计后，派发 T1 接口改造、T2 页面回调、I1 集成三个子任务。"
+      },
+      {
+        id: "IMPL",
+        title: "开发实现",
+        status: "READY_FOR_CHECKS",
+        color: "ok",
+        summary: "T1 接口、T2 页面回调已完成；I1 集成通过整体构建与回归测试，候选快照为 commit 4f2a9c1。",
+        artifacts: [
+          ["src/auth/oauth.ts", "OAuth 入口"],
+          ["src/auth/callback.tsx", "回调页面"],
+          ["tests/auth/integration.test.ts", "集成测试"],
+          ["build-reports/sdlc-impl-028.log", "构建日志"]
+        ],
+        decisions: [
+          "T1 与 T2 并行执行，T2 依赖 T1 的 token 接口契约。",
+          "集成时统一替换旧 session 中间件，保持 API 路径不变。"
+        ],
+        matrix: [
+          ["AC-1", "支持 OIDC 标准登录", "ok", "PASS"],
+          ["AC-2", "本地登录作为降级路径", "ok", "PASS"],
+          ["DoD-5", "单元/集成测试通过", "ok", "PASS"]
+        ],
+        risks: [
+          "旧 session 中间件仍有 2 处引用未清理，标记为技术债务。"
+        ],
+        next: "提交独立评审与独立验收；评审前不得修改候选。"
+      },
+      {
+        id: "REVIEW",
+        title: "独立评审",
+        status: "NEEDS_WORK",
+        color: "danger",
+        summary: "发现 1 个阻断问题：回调页面未校验 state 参数，存在 CSRF 风险；2 个非阻断建议。",
+        artifacts: [
+          ["reviews/review-auth-028.md", "评审报告"],
+          ["reviews/issues/001-csrf-state.md", "阻断问题详情"]
+        ],
+        decisions: [],
+        matrix: [
+          ["AC-1", "支持 OIDC 标准登录", "ok", "PASS"],
+          ["SEC-1", "回调 state 参数校验", "danger", "FAIL"],
+          ["DoD-7", "独立评审通过", "pending", "NOT_RUN"]
+        ],
+        risks: [
+          "阻断问题未修复前不能进入验收。"
+        ],
+        next: "回开发实现修复 state 校验，重新集成并复评。"
+      },
+      {
+        id: "ACCEPT",
+        title: "独立验收",
+        status: "NOT_STARTED",
+        color: "pending",
+        summary: "等待评审问题修复后，在 staging 环境执行端到端验收。",
+        artifacts: [],
+        decisions: [],
+        matrix: [
+          ["AC-1", "支持 OIDC 标准登录", "pending", "NOT_RUN"],
+          ["DoD-9", "验收环境实测通过", "pending", "NOT_DUE"]
+        ],
+        risks: [
+          "验收环境 provider 配置尚未就绪。"
+        ],
+        next: "上游评审通过后，按 staging 环境制品执行验收。"
+      },
+      {
+        id: "RELEASE",
+        title: "交付运维",
+        status: "NOT_STARTED",
+        color: "pending",
+        summary: "发布任务尚未启用；需单独的生产发布授权。",
+        artifacts: [],
+        decisions: [],
+        matrix: [
+          ["DoD-12", "生产发布授权", "pending", "NOT_DUE"],
+          ["DoD-13", "上线观察窗口完成", "pending", "NOT_DUE"]
+        ],
+        risks: [
+          "发布窗口未确定。"
+        ],
+        next: "用户明确授权发布并指定环境后，再启用交付运维环节。"
+      }
+    ];
+
+    const colors = { ok: "var(--ok)", warn: "var(--warn)", danger: "var(--danger)", pending: "var(--pending)" };
+    const currentIndex = 2;
+    let viewingIndex = currentIndex;
+
+    function renderTimeline() {
+      const nav = document.getElementById("timeline");
+      nav.innerHTML = stages.map((s, i) => {
+        const state = i < currentIndex ? "done" : i === currentIndex ? "current" : "upcoming";
+        const tick = state === "done" ? "✓" : "";
+        return `
+          <div class="timeline-step ${state}" data-idx="${i}">
+            <div class="dot">${tick}</div>
+            <div class="step-label">${s.title}</div>
+            <div class="step-status">${i === currentIndex ? "当前" : state === "done" ? "已完成" : "待开始"}</div>
+          </div>
+        `;
+      }).join("");
+
+      nav.querySelectorAll(".timeline-step").forEach(el => {
+        el.addEventListener("click", () => {
+          viewingIndex = +el.dataset.idx;
+          render();
+        });
+      });
+    }
+
+    function render() {
+      renderTimeline();
+      const s = stages[viewingIndex];
+      const isCurrent = viewingIndex === currentIndex;
+      document.getElementById("navNote").textContent = isCurrent
+        ? "这是当前正在推进的环节产物。"
+        : `回看 ${s.title} 的历史产物；当前推进环节为「${stages[currentIndex].title}」。`;
+
+      document.getElementById("detail").innerHTML = `
+        <div class="detail-grid">
+          <section class="card ${s.color}">
+            <h2>${s.title} <span class="badge" style="color:${colors[s.color]}">${s.status}</span></h2>
+            <p class="summary">${s.summary}</p>
+            <div class="kicker">产物位置 / Artifacts</div>
+            <ul class="artifact-list">
+              ${s.artifacts.length ? s.artifacts.map(([p, d]) => `
+                <li><span style="color:${colors[s.color]}">●</span> <a href="#">${p}</a> <span style="color:var(--muted)">— ${d}</span></li>
+              `).join("") : `<li style="color:var(--muted)">本环节暂无文件产物</li>`}
+            </ul>
+            ${s.decisions.length ? `
+              <div class="kicker">关键决策 / Key Decisions</div>
+              <ul class="risk-list">${s.decisions.map(d => `<li>${d}</li>`).join("")}</ul>
+            ` : ""}
+          </section>
+
+          <section class="card ${s.color}">
+            <div class="kicker">AC / DoD 核验摘要</div>
+            <table class="matrix">
+              <thead><tr><th>编号</th><th>条目</th><th>结果</th></tr></thead>
+              <tbody>
+                ${s.matrix.map(([id, name, c, res]) => `
+                  <tr><td>${id}</td><td>${name}</td><td class="result" style="color:${colors[c]}">${res}</td></tr>
+                `).join("")}
+              </tbody>
+            </table>
+            ${s.risks.length ? `
+              <div class="kicker" style="margin-top:20px">风险与待确认 / Risks & Open</div>
+              <ul class="risk-list">${s.risks.map(r => `<li>${r}</li>`).join("")}</ul>
+            ` : ""}
+            <div class="action"><strong>下一步 / Next</strong><span>${s.next}</span></div>
+          </section>
+        </div>
+      `;
+    }
+
+    render();
+  </script>
+</body>
+</html>

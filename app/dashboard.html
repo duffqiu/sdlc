@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDLC 环节产物仪表盘</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --surface: #ffffff;
+      --grid: rgba(60, 80, 100, 0.08);
+      --line: rgba(60, 80, 100, 0.18);
+      --text: #1f2933;
+      --muted: #5c6875;
+      --accent: #0d7377;
+      --warn: #f5a623;
+      --danger: #e74c3c;
+      --ok: #00a86b;
+      --pending: #8e99a4;
+      --shadow: 0 2px 14px rgba(30, 40, 50, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        var(--bg);
+      background-size: 36px 36px;
+      color: var(--text);
+      font-family: "Noto Serif SC", "Crimson Text", serif;
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      padding: 22px 28px 18px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h1::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .meta {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .timeline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px 8px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 42px;
+      left: 8%;
+      right: 8%;
+      height: 2px;
+      background: var(--line);
+      z-index: 0;
+    }
+
+    .timeline-step {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      cursor: pointer;
+      width: 110px;
+      padding: 6px;
+      border-radius: 4px;
+      transition: background .12s;
+    }
+
+    .timeline-step:hover { background: rgba(13, 115, 119, 0.06); }
+
+    .dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin: 0 auto 8px;
+      background: var(--surface);
+      border: 2px solid var(--pending);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: transparent;
+      transition: transform .15s, border-color .15s, background .15s;
+    }
+
+    .timeline-step.done .dot {
+      background: var(--ok);
+      border-color: var(--ok);
+      color: #fff;
+    }
+
+    .timeline-step.current .dot {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: scale(1.25);
+      box-shadow: 0 0 0 4px rgba(13, 115, 119, 0.14);
+    }
+
+    .timeline-step.upcoming .dot { background: var(--surface); border-color: var(--line); }
+
+    .step-label { font-size: 12px; font-weight: 600; }
+    .step-status {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 3px;
+      text-transform: uppercase;
+    }
+
+    .detail {
+      padding: 16px 28px 36px;
+      animation: fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; bottom: 0; width: 5px;
+      background: var(--pending);
+    }
+
+    .card.ok::before { background: var(--ok); }
+    .card.warn::before { background: var(--warn); }
+    .card.danger::before { background: var(--danger); }
+    .card.pending::before { background: var(--pending); }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 17px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .badge {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      padding: 3px 8px;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+
+    .summary {
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .artifact-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px;
+    }
+
+    .artifact-list li {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 0;
+      border-bottom: 1px dashed var(--line);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+    }
+
+    .artifact-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .artifact-list a:hover { text-decoration: underline; }
+
+    .kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .risk-list {
+      margin: 0 0 16px;
+      padding-left: 16px;
+    }
+
+    .risk-list li { margin-bottom: 5px; font-size: 13px; }
+
+    .matrix {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+    }
+
+    .matrix th, .matrix td {
+      padding: 7px 9px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .matrix th {
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      background: rgba(60,80,100,0.04);
+    }
+
+    .result { font-weight: 600; letter-spacing: 0.04em; }
+
+    .action {
+      border-left: 3px solid var(--accent);
+      padding: 12px 14px;
+      background: rgba(13, 115, 119, 0.06);
+      margin-top: 10px;
+    }
+
+    .action strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 12px;
+    }
+
+    .action span { color: var(--muted); font-size: 12px; }
+
+    .empty {
+      background: var(--surface);
+      border: 1px dashed var(--line);
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
+      box-shadow: var(--shadow);
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 14px 28px;
+      color: var(--muted);
+      font-size: 11px;
+      font-family: "IBM Plex Mono", monospace;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.6);
+    }
+
+    @media (max-width: 980px) {
+      .timeline { overflow-x: auto; gap: 16px; justify-content: flex-start; }
+      .timeline::before { display: none; }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="empty">等待仪表盘数据...</div>
+  </div>
+
+  /* DASHBOARD_DATA */
+  /* APP_SCRIPT */
+</body>
+</html>
