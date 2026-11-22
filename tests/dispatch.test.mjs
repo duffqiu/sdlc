@@ -176,6 +176,14 @@ test('design style catalog is bundled with 84 entries, four groups, and 16 local
   assert.ok(coordinator.includes('design-styles/index.json') && coordinator.includes('最多两层'));
 });
 
+test('frontend acceptance stays optional and warns about its cost', async () => {
+  for (const rule of ['前端验收的成本与可选性', '不得设为 `required`', '默认不勾选', '开销较大']) assert.ok(skill.includes(rule), `Skill: ${rule}`);
+  for (const rule of ['涉及前端/UI 的独立验收必须是可选项', '默认不勾选', '开销较大']) assert.ok(coordinator.includes(rule), `主控: ${rule}`);
+  const acceptance = await readFile(new URL('references/acceptance-verifier.md', root), 'utf8');
+  for (const rule of ['前端验收是可选项', '未勾选时只报告未执行/未覆盖', '开销']) assert.ok(acceptance.includes(rule), `验收: ${rule}`);
+  for (const rule of ['required=false', '默认不勾选', '开销']) assert.ok(selector.includes(rule), `卡片: ${rule}`);
+});
+
 test('AI harness optimization is surfaced only for explicit or repeated harness signals', async () => {
   for (const rule of ['强信号', '弱信号', '不展示', '重复 ≥2 次', '只读诊断', 'required=true']) assert.ok(skill.includes(rule), `Skill: ${rule}`);
   for (const rule of ['AI Harness 优化只在命中信号时加入环节选择表', '强信号', '弱信号', '不展示', '只读诊断']) assert.ok(coordinator.includes(rule), `主控: ${rule}`);

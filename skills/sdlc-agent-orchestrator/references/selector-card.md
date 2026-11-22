@@ -18,6 +18,8 @@
 
 环节 ID 使用 `solution-designer`、`implementation-engineer`、`independent-reviewer`、`acceptance-verifier`、`release-operations` 中的实际相关项。这些只是环节标识，不是宿主 Agent ID。
 
+涉及前端/UI 的独立验收必须作为可选项（`required=false`），默认不勾选，并在理由中提示开销较大：真实浏览器/多视口、截图与交互回归、多轮复测可能带来的会话轮次和模型费用；不得自动设为 required。
+
 开发实现仍只占一行，不把子任务加入 stages，也不重复插入 implementation-engineer 行。确认后，主会话可按拆解计划在原范围和总预算内创建多个开发子任务会话，统一继承该行 modelKey，拆解和最终集成也沿用它；页面及选择服务不自行拆任务或派发。主会话在并行派发前说明计划数量／并发度，增加模型、改变范围或超预算仍要确认。
 
 `recommendedModelKey` 必须在本次 `models` 中；选择有依据且兼容的推荐项，页面将其默认选中并标注“推荐”。推荐依据不足时可用目录中适用的默认项作中性推荐，不把高价或品牌当作质量证明。`required: true` 仅用于项目或约定终点不可省略的门禁，需在 reason 中写明依据；不要把所有建议都锁成必需。

@@ -1,6 +1,6 @@
 # SDLC 开发环节调度
 
-Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.6.2`。
+Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.6.3`。
 
 先根据任务推荐开发环节，再在主会话内展示可交互表格：每行默认选中推荐模型，可用下拉框更换模型、勾选是否执行，最后点击“确认并继续”。预选只是建议，确认前不启动子会话；确认后由主会话统一调度和处理问答，不走固定 pipeline。
 
@@ -74,6 +74,10 @@ Qoder 插件 `sdlc-agent-orchestrator`，版本 `0.6.2`。
 `design-styles/` 收录来自 [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md) 的 84 个风格索引和 16 个常用 `DESIGN.md`，按其 MIT 许可证使用。内置风格包括 Claude、Linear、Vercel、Notion、Stripe、Coinbase、Figma、Framer 等，完整索引见 `design-styles/index.json`。
 
 用户未指定风格时，主会话用 AskMe 分两层选择：先选四类视觉气质（技术／产品感、简洁／效率感、创意／视觉感、大胆／品牌感），再选 3–4 个具体风格；行业分类只作为元数据，不作为一级选择。用户也可以直接给出品牌名、slug 或参考网站。选中后以对应 `DESIGN.md` 为实现和验收基线；未内置的 slug 经确认后再获取，不一次性列出 84 个样式。
+
+## 前端验收是可选项
+
+任务涉及前端/UI 时，独立验收始终是可选项，不会设为必需，默认也不勾选。卡片会提示可能的开销：真实浏览器、多设备视口、截图与交互回归、多轮复测，会增加会话轮次和模型费用。只有你明确勾选后才执行；跳过时标记为未执行/未覆盖，不视为通过。
 
 ## AI Harness 优化何时出现
 
